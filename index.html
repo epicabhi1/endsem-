@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Registration</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f3f4f6;
+      font-family: system-ui, Arial, sans-serif;
+      padding: 20px;
+    }
+
+    .card {
+      width: 380px;
+      padding: 20px;
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    }
+
+    h2 {
+      margin: 0 0 12px 0;
+      font-size: 20px;
+    }
+
+    h3 {
+      margin-top: 0;
+    }
+
+    .field {
+      margin-bottom: 12px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 13px;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 6px;
+      border: 1px solid #d1d5db;
+      font-size: 14px;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #2563eb;
+    }
+
+    .error {
+      color: #b91c1c;
+      margin-top: 6px;
+      font-size: 12px;
+    }
+
+    .btn-row {
+      margin-top: 16px;
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    button {
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .primary-btn {
+      background: #2563eb;
+      color: #fff;
+    }
+
+    .primary-btn:hover {
+      background: #1d4ed8;
+    }
+
+    .gray-btn {
+      border: 1px solid #d1d5db;
+      background: #fff;
+    }
+
+    .gray-btn:hover {
+      background: #f9fafb;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px dashed #e5e7eb;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Student Registration</h2>
+
+    <!-- Step 1: Form -->
+    <div id="step1" class="step">
+      <form id="registrationForm">
+        <div class="field">
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" placeholder="Enter name">
+          <div id="nameError" class="error"></div>
+        </div>
+
+        <div class="field">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="Enter email">
+          <div id="emailError" class="error"></div>
+        </div>
+
+        <div class="btn-row">
+          <button type="button" class="primary-btn" onclick="handleNext()">Next</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Step 2: Summary -->
+    <div id="step2" class="step hidden">
+      <h3>Summary</h3>
+      <div class="summary-row">
+        <strong>Name:</strong>
+        <span id="summaryName">-</span>
+      </div>
+      <div class="summary-row">
+        <strong>Email:</strong>
+        <span id="summaryEmail">-</span>
+      </div>
+
+      <div class="btn-row">
+        <button type="button" class="gray-btn" onclick="handleBack()">Back</button>
+        <button type="button" class="primary-btn" onclick="handleSubmit()">Submit</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let step = 1;
+    let form = { name: "", email: "" };
+
+    function handleChange(fieldName) {
+      form[fieldName] = document.getElementById(fieldName).value;
+      document.getElementById(fieldName + "Error").textContent = "";
+    }
+
+    function validateStep1() {
+      const err = {};
+      
+      if (!form.name.trim()) {
+        err.name = "Name is required";
+      }
+      
+      if (!form.email.trim()) {
+        err.email = "Email is required";
+      }
+      
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (form.email && !emailPattern.test(form.email)) {
+        err.email = "Enter a valid email";
+      }
+
+      // Display errors
+      document.getElementById("nameError").textContent = err.name || "";
+      document.getElementById("emailError").textContent = err.email || "";
+
+      return Object.keys(err).length === 0;
+    }
+
+    function handleNext() {
+      if (!validateStep1()) return;
+      
+      step = 2;
+      document.getElementById("step1").classList.add("hidden");
+      document.getElementById("step2").classList.remove("hidden");
+      
+      // Update summary
+      document.getElementById("summaryName").textContent = form.name || "-";
+      document.getElementById("summaryEmail").textContent = form.email || "-";
+    }
+
+    function handleBack() {
+      step = 1;
+      document.getElementById("step2").classList.add("hidden");
+      document.getElementById("step1").classList.remove("hidden");
+    }
+
+    function handleSubmit() {
+      alert(`Submitted:\nName: ${form.name}\nEmail: ${form.email}`);
+    }
+
+    // Add event listeners for input changes
+    document.getElementById("name").addEventListener("input", function() {
+      handleChange("name");
+    });
+
+    document.getElementById("email").addEventListener("input", function() {
+      handleChange("email");
+    });
+  </script>
+</body>
+</html>
